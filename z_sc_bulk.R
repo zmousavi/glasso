@@ -16,9 +16,9 @@ library(igraph)
 #library(limma)
 #library(RColorBrewer)
 
-source('aggregated_mst.R')
-source('coexpression_network.R')
-source('network.R')
+source('/work-zfs/abattle4/zeinab/prog/scnet/ashis/aggregated_mst.R')
+source('/work-zfs/abattle4/zeinab/prog/scnet/ashis/coexpression_network.R')
+source('/work-zfs/abattle4/zeinab/prog/scnet/ashis/network.R')
 
 ##### parse arguments ######
 args <- arg_parser("program");

@@ -1,5 +1,5 @@
 
-setwd("/work-zfs/abattle4/zeinab/prog/scnet")
+setwd("/work-zfs/abattle4/zeinab/prog/scnet/glasso")
 
 library(feather)
 library(argparser)
@@ -17,9 +17,9 @@ library(igraph)
 #library(limma)
 #library(RColorBrewer)
 
-source('aggregated_mst.R')
-source('coexpression_network.R')
-source('network.R')
+source('/work-zfs/abattle4/zeinab/prog/scnet/ashis/aggregated_mst.R')
+source('/work-zfs/abattle4/zeinab/prog/scnet/ashis/coexpression_network.R')
+source('/work-zfs/abattle4/zeinab/prog/scnet/ashis/network.R')
 
 ##### parse arguments ######
 args <- arg_parser("program");
@@ -57,7 +57,7 @@ if(endsWith(x = expr_fn, suffix = '.feather')){
 } else {
   expr_df_raw = read_df(expr_fn, sep = data_sep)
 }
-dim(expr_df_raw)
+#dim(expr_df_raw)
 
 
 if(any(dim(expr_df_raw)<10))
@@ -68,7 +68,7 @@ expr_df = expr_df_raw
 
 
 
-alpha_list = seq(0.001, 1, 0.1)
+alpha_list = seq(0.001, 1, 0.01)
 
 #alpha_list = c(0.3, 0.8)
 r_squared_list = c()
@@ -96,7 +96,11 @@ for (alpha in alpha_list){
   edge_count = gsize(g)
   edge_count_list = c(edge_count_list, edge_count)
   r_squared_list = c(r_squared_list, r_squared)
-  
+  rm(g)
+  cat("alpha = ", alpha)
+  cat("r_squared = ", r_squared)
+  cat("edge_count = ", edge_count)
+  cat( "\n")
 }
 r_squared_list
 edge_count_list
