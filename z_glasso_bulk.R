@@ -89,7 +89,7 @@ for (alpha in alpha_list){
   
   degree = G.degree.histogram[,1]
   count = G.degree.histogram[,2]
-  r_squared = summary(lm(count ~ degree))$r.squared
+  r_squared = summary(lm(log(count) ~ log(degree)))$r.squared
   print(r_squared)
   edge_count = gsize(g)
   edge_count_list = c(edge_count_list, edge_count)
