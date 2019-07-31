@@ -5,7 +5,7 @@
 pl_alt_fit <- function(observed_data, dist_test, significance=0.05) {
   library("poweRlaw")
   data_ref <- displ$new(observed_data)
-  est <- estimate_xmin(data_pl)
+  est <- estimate_xmin(data_ref)
   data_ref$xmin <- est
   
   data_alt_object <-  get(dist_test)
@@ -34,27 +34,43 @@ scalefree_test <- function(graph, significance){
   }
   
   #construct power law object for data
-  observed_data = degree_array+1
-  
+  #observed_data = degree_array+1
+  observed_data = degree_array
+
   data_pl = displ$new(observed_data)
-  
+ print ("DAATA_PL") 
+ print (data_pl)
   #estimate xmin
   est <- estimate_xmin(data_pl)
+	print("EST")
+print(est)
   data_pl$xmin <- est
-  est$gof
-  #how well does power law distribution fit the data 
+  print(est$gof)
+ pl_lnorm <- "N/A"
+pl_exp <- "N/A"
+pl_pois <- "N/A"
+ 
+ #how well does power law distribution fit the data 
   if (est$gof > significance){
     power_law = as.logical(FALSE)
     
   } else{
     #how likely is the data drawn from power law?
     print ("bootstrap")
+    print("data_pl")
+    print (data_pl)
+
     bs <- bootstrap_p(data_pl)
-    if (bs$p < significance) {
+    bs_p = bs$p
+    print ("bootstrap finished")
+    print(bs_p)
+    if (bs_p < significance) {
       power_law = as.logical(FALSE)
-      
+      print("here")
     } else{
+      print ("pl_lnorm start")
       pl_lnorm = pl_alt_fit(observed_data, "dislnorm")
+      print("pl_lnorm finished")
       pl_exp = pl_alt_fit(observed_data, "disexp")
       pl_pois = pl_alt_fit(observed_data, "dispois")
       
@@ -94,7 +110,7 @@ linear_model = lm(log(count/sum(count)) ~ log(degree))
 r_squared = summary(linear_model)$r.squared
 slope = summary(linear_model)$coefficients[2]
   
-dist_name = sprintf('%s_net_%s' , graph_type, number_nodes)
+dist_name = sprintf('%s_net_%s.pdf' , graph_type, number_nodes)
 pdf(file.path(out_dir, dist_name))
 V(graph)$color = "lightblue"
 plot.igraph(graph, vertex.label=NA, vertex.size = 8)
@@ -103,7 +119,7 @@ title(bquote(atop(.(graph_type),
                        atop(R^2  ==  .(r_squared), "slope =" ~.(slope) ) ))))
 dev.off()
 
-net_name = sprintf('%s_distribution_%s' , graph_type, number_nodes)
+net_name = sprintf('%s_distribution_%s.pdf' , graph_type, number_nodes)
 pdf(file.path(out_dir, net_name))
 hist(degree_array, freq=TRUE, col="lightblue", main="", xlab="Vertex Degrees", ylab="Frequency")
 title(bquote(atop("?" ,
